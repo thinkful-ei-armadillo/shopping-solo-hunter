@@ -10,6 +10,9 @@ const STORE = {
   ],
   hideChecked: false
 };
+const SEARCH_STORE = {items: [
+
+]};
 
 function generateItemElement(item, itemIndex) {
   return `
@@ -65,7 +68,7 @@ function toggleHideCheckedState() {
 
 function addItemToShoppingList(itemName) {
   console.log(`Adding "${itemName}" to shopping list`);
-  STORE.push({name: itemName, checked: false});
+  (STORE.items).push({name: itemName, checked: false});
 }
 
 function handleNewItemSubmit() {
@@ -79,6 +82,26 @@ function handleNewItemSubmit() {
   });
 }
 
+function showSearchedItems (searchInput) {
+  console.log(`Searching for "${searchInput}"`);
+  (SEARCH_STORE.items).push({name: searchInput, checked: false});
+  console.log(SEARCH_STORE.items);
+  for (let i = 0; i < (SEARCH_STORE.items).length; i++) {
+    let filterSearch = SEARCH_STORE.items[i];
+    const shoppingListItemsString = generateItemElement(filterSearch);
+    $('.js-shopping-list').html(shoppingListItemsString);
+  }
+}
+
+function handleSearchedItem () {
+  $('#js-search-engine-form').submit(function(event) {
+    event.preventDefault();
+    console.log('`handleSearchedItem` ran');
+    const searchedItem = $('.js-search-engine-entry').val();
+    $('.js-search-engine-entry').val('');
+    showSearchedItems (searchedItem);
+  });
+}
 
 function toggleCheckedForListItem(itemIndex) {
   console.log('Toggling checked property for item at index ' + itemIndex);
@@ -138,6 +161,7 @@ function handleShoppingList() {
   handleItemCheckClicked();
   handleDeleteItemClicked();
   handleToggleCheckedItems ();
+  handleSearchedItem ();
 }
 
 // when the page loads, call `handleShoppingList`
